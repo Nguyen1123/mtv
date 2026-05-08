@@ -1,0 +1,171 @@
+/* ==========================================
+   TỐI ƯU HÓA PHÔNG CHỮ (TYPOGRAPHY TOÀN HỆ THỐNG)
+   ========================================== */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --font-main: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Tối ưu độ nét và khoảng cách chữ cho Body */
+html, body {
+    font-family: var(--font-main) !important;
+    -webkit-font-smoothing: antialiased; /* Làm mịn chữ trên màn hình */
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility; /* Tối ưu hiển thị khoảng cách ký tự */
+    font-size: 15px; /* Cỡ chữ tiêu chuẩn, dễ đọc cho trang quản trị */
+    line-height: 1.6;
+}
+
+/* Ép buộc TẤT CẢ các thẻ, bảng (table), form (input) phải dùng đúng phông chữ */
+*, *::before, *::after, input, button, textarea, select, table, th, td, a {
+    font-family: var(--font-main) !important;
+}
+
+/* Tối ưu riêng cho Tiêu đề: Đậm hơn, khoảng cách chữ hẹp lại một chút (xu hướng thiết kế hiện đại) */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    letter-spacing: -0.02em; 
+    line-height: 1.3;
+    color: #0f172a;
+}
+
+/* Chỉnh lại độ lớn chữ trong bảng Admin cho thanh thoát */
+.table th {
+    font-size: 0.85rem;
+    letter-spacing: 0.03em;
+}
+.table td {
+    font-size: 0.95rem;
+}
+/* --- TRẠNG THÁI ACTIVE CHO MENU --- */
+.nav-menu a {
+    position: relative;
+    padding-bottom: 4px;
+}
+.nav-menu a.active {
+    color: var(--primary);
+    font-weight: 700;
+}
+.nav-menu a.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: var(--primary);
+    border-radius: 4px;
+}
+
+/* --- LÀM ĐẸP FORM NHẬP LIỆU (UX/UI) --- */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    font-size: 0.95rem;
+}
+.form-group input, 
+.form-group textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 1rem;
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+    transition: all 0.3s ease;
+}
+.form-group input::placeholder, 
+.form-group textarea::placeholder {
+    color: #94a3b8;
+}
+.form-group input:hover, 
+.form-group textarea:hover {
+    border-color: #cbd5e1;
+}
+.form-group input:focus, 
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    background-color: #ffffff;
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
+}
+/* ==========================================
+   TỐI ƯU HÓA GIAO DIỆN FORM (INPUT, TEXTAREA) CHO TOÀN HỆ THỐNG
+   ========================================== */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+/* Định dạng nhãn (Label) nằm gọn gàng trên 1 dòng */
+.form-group label {
+    display: block !important;
+    margin-bottom: 0.5rem !important;
+    font-weight: 600 !important;
+    color: #1e293b !important;
+    font-size: 0.95rem !important;
+}
+
+/* Định dạng các ô nhập liệu chữ */
+.form-group input[type="text"], 
+.form-group input[type="password"],
+.form-group input[type="email"],
+.form-group input[type="tel"],
+.form-group input[type="number"],
+.form-group textarea {
+    display: block !important;
+    width: 100% !important;
+    padding: 12px 16px !important;
+    border: 1.5px solid #cbd5e1 !important;
+    border-radius: 10px !important;
+    font-family: inherit !important;
+    font-size: 1rem !important;
+    background-color: #f8fafc !important;
+    color: #1e293b !important;
+    box-sizing: border-box !important;
+    transition: all 0.3s ease !important;
+}
+
+/* Hiệu ứng khi nhấp chuột vào ô nhập (Sáng viền xanh) */
+.form-group input[type="text"]:focus, 
+.form-group input[type="password"]:focus,
+.form-group textarea:focus {
+    outline: none !important;
+    border-color: #10b981 !important;
+    background-color: #ffffff !important;
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15) !important;
+}
+
+/* Định dạng riêng cho ô chọn File (Hình ảnh) */
+.form-group input[type="file"] {
+    display: block !important;
+    width: 100% !important;
+    padding: 12px !important;
+    border: 1.5px dashed #cbd5e1 !important;
+    border-radius: 10px !important;
+    background-color: #f8fafc !important;
+    cursor: pointer !important;
+    box-sizing: border-box !important;
+    color: #64748b !important;
+}
+
+/* Xử lý các form nằm trên cùng 1 hàng (chia cột) */
+.form-row {
+    display: flex;
+    gap: 1.5rem;
+    width: 100%;
+}
+
+/* Khi xem trên điện thoại sẽ tự động rớt xuống thành 1 cột */
+@media (max-width: 640px) {
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+}

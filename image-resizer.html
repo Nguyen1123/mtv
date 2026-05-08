@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Công Cụ Chỉnh Kích Thước Ảnh - Logo Resizer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+        }
+
+        .section {
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 2px solid #ecf0f1;
+        }
+
+        .section h2 {
+            color: #27ae60;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .upload-area {
+            border: 3px dashed #27ae60;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upload-area:hover {
+            background: rgba(39, 174, 96, 0.05);
+            border-color: #2ecc71;
+        }
+
+        .upload-area.dragover {
+            background: rgba(39, 174, 96, 0.1);
+            border-color: #2ecc71;
+        }
+
+        .upload-area i {
+            font-size: 3rem;
+            color: #27ae60;
+            margin-bottom: 1rem;
+        }
+
+        #imageInput {
+            display: none;
+        }
+
+        .preview-box {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            min-height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: auto;
+        }
+
+        #preview {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 4px;
+        }
+
+        #canvas {
+            display: none;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #27ae60;
+        }
+
+        input[type="number"],
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        input[type="number"]:focus,
+        input[type="text"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #27ae60;
+            box-shadow: 0 0 5px rgba(39, 174, 96, 0.3);
+        }
+
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #229954;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+
+        .btn-success {
+            background: #27ae60;
+            color: white;
+            grid-column: 1 / -1;
+        }
+
+        .btn-success:hover {
+            background: #229954;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .presets {
+            margin-bottom: 1.5rem;
+        }
+
+        .preset-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+        }
+
+        .preset-btn {
+            padding: 0.5rem;
+            background: #ecf0f1;
+            border: 2px solid #bdc3c7;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            color: #27ae60;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .preset-btn:hover {
+            background: #27ae60;
+            color: white;
+            border-color: #27ae60;
+        }
+
+        .info-box {
+            background: #d1ecf1;
+            color: #0c5460;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            border-left: 4px solid #0c5460;
+        }
+
+        .info-box p {
+            margin: 0.5rem 0;
+            font-size: 0.9rem;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            border-left: 4px solid #155724;
+            display: none;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            border-left: 4px solid #721c24;
+            display: none;
+        }
+
+        .aspect-ratio-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+        }
+
+        .ratio-btn {
+            padding: 0.5rem;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+
+        .ratio-btn:hover {
+            border-color: #27ae60;
+        }
+
+        .ratio-btn.active {
+            background: #27ae60;
+            color: white;
+            border-color: #27ae60;
+        }
+
+        .download-preview {
+            background: white;
+            border: 2px solid #27ae60;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            display: none;
+        }
+
+        .download-preview img {
+            max-width: 100%;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .button-group {
+                grid-template-columns: 1fr;
+            }
+
+            .input-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🖼️ Công Cụ Chỉnh Kích Thước Ảnh</h1>
+            <p>Upload, chỉnh sửa và tải xuống ảnh của bạn</p>
+        </div>
+
+        <div class="content">
+            <!-- Upload Section -->
+            <div class="section">
+                <h2>1️⃣ Upload Ảnh</h2>
+                
+                <div class="upload-area" id="uploadArea">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">📤</div>
+                    <p style="margin-bottom: 0.5rem; font-weight: 600;">Kéo thả ảnh vào đây</p>
+                    <p style="color: #999; font-size: 0.9rem;">hoặc click để chọn file</p>
+                    <p style="color: #999; font-size: 0.85rem; margin-top: 1rem;">
+                        Hỗ trợ: JPG, PNG, GIF, WebP (Max: 10MB)
+                    </p>
+                </div>
+                <input type="file" id="imageInput" accept="image/*">
+
+                <div style="margin-top: 1rem;">
+                    <div class="preview-box">
+                        <div id="noImageText" style="color: #999; text-align: center;">
+                            <p style="font-size: 0.9rem;">Chưa có ảnh nào được chọn</p>
+                        </div>
+                        <img id="preview" style="display: none;">
+                    </div>
+                    <p style="color: #666; font-size: 0.85rem; margin-top: 0.5rem;">
+                        <span id="imageDimensions"></span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Settings Section -->
+            <div class="section">
+                <h2>2️⃣ Chỉnh Kích Thước</h2>
+
+                <div class="info-box">
+                    <p>💡 <strong>Mẹo:</strong> Chọn preset cho logo hoặc nhập kích thước tùy chỉnh</p>
+                </div>
+
+                <div class="presets">
+                    <label>Preset Kích Thước Logo:</label>
+                    <div class="preset-buttons">
+                        <button class="preset-btn" data-width="200" data-height="60">200x60 (Web)</button>
+                        <button class="preset-btn" data-width="400" data-height="120">400x120 (HD)</button>
+                        <button class="preset-btn" data-width="1200" data-height="400">1200x400 (Banner)</button>
+                        <button class="preset-btn" data-width="500" data-height="500">500x500 (Square)</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Tỉ Lệ Khung Hình:</label>
+                    <div class="aspect-ratio-selector">
+                        <button class="ratio-btn active" data-ratio="16/9">16:9</button>
+                        <button class="ratio-btn" data-ratio="4/3">4:3</button>
+                        <button class="ratio-btn" data-ratio="1/1">1:1</button>
+                        <button class="ratio-btn" data-ratio="21/9">21:9</button>
+                    </div>
+                </div>
+
+                <div class="input-row" style="margin-top: 1rem;">
+                    <div class="form-group">
+                        <label for="width">Rộng (px):</label>
+                        <input type="number" id="width" min="1" max="4000" value="200" placeholder="Nhập chiều rộng">
+                    </div>
+                    <div class="form-group">
+                        <label for="height">Cao (px):</label>
+                        <input type="number" id="height" min="1" max="4000" value="60" placeholder="Nhập chiều cao">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="quality">Chất Lượng:</label>
+                    <input type="range" id="quality" min="0.5" max="1" step="0.1" value="0.9">
+                    <small style="color: #666; margin-top: 0.3rem; display: block;">Chất lượng: <span id="qualityValue">90</span>%</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="format">Định Dạng Xuất:</label>
+                    <select id="format">
+                        <option value="png">PNG (Trong suốt)</option>
+                        <option value="jpg">JPG (Nén tốt)</option>
+                        <option value="webp">WebP (Hiện đại)</option>
+                    </select>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn-primary" id="resizeBtn" disabled>📐 Chỉnh Kích Thước</button>
+                    <button class="btn-secondary" id="resetBtn" disabled>🔄 Làm Lại</button>
+                </div>
+
+                <div class="success-message" id="successMessage">
+                    ✅ Chỉnh kích thước thành công! Hãy tải xuống ảnh của bạn.
+                </div>
+
+                <div class="error-message" id="errorMessage"></div>
+            </div>
+        </div>
+
+        <!-- Preview & Download -->
+        <div style="padding: 2rem; background: #f8f9fa; border-top: 2px solid #ecf0f1;">
+            <div class="download-preview" id="downloadPreview">
+                <h3 style="color: #27ae60; margin-bottom: 1rem;">✅ Ảnh Đã Chỉnh Sửa</h3>
+                <img id="resultImage" alt="Kết quả chỉnh sửa">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+                    <button class="btn-success" id="downloadBtn">⬇️ Tải Xuống</button>
+                    <button class="btn-secondary" id="copyBtn">📋 Copy Base64</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const uploadArea = document.getElementById('uploadArea');
+        const imageInput = document.getElementById('imageInput');
+        const preview = document.getElementById('preview');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const widthInput = document.getElementById('width');
+        const heightInput = document.getElementById('height');
+        const qualityInput = document.getElementById('quality');
+        const qualityValue = document.getElementById('qualityValue');
+        const resizeBtn = document.getElementById('resizeBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const copyBtn = document.getElementById('copyBtn');
+        const downloadPreview = document.getElementById('downloadPreview');
+        const resultImage = document.getElementById('resultImage');
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+        const formatSelect = document.getElementById('format');
+        const noImageText = document.getElementById('noImageText');
+        const imageDimensions = document.getElementById('imageDimensions');
+
+        let originalImage = null;
+
+        // Upload Area Click
+        uploadArea.addEventListener('click', () => imageInput.click());
+
+        // Drag and Drop
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            handleImageSelect(e.dataTransfer.files[0]);
+        });
+
+        // File Input
+        imageInput.addEventListener('change', (e) => {
+            handleImageSelect(e.target.files[0]);
+        });
+
+        function handleImageSelect(file) {
+            if (!file || !file.type.startsWith('image/')) {
+                showError('Vui lòng chọn file ảnh hợp lệ!');
+                return;
+            }
+
+            if (file.size > 10 * 1024 * 1024) {
+                showError('File quá lớn! Tối đa 10MB');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    originalImage = img;
+                    preview.src = img.src;
+                    preview.style.display = 'block';
+                    noImageText.style.display = 'none';
+                    imageDimensions.textContent = `Kích thước gốc: ${img.width}x${img.height}px`;
+                    resizeBtn.disabled = false;
+                    resetBtn.disabled = false;
+                    successMessage.style.display = 'none';
+                    downloadPreview.style.display = 'none';
+                    hideError();
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Preset Buttons
+        document.querySelectorAll('.preset-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const width = btn.dataset.width;
+                const height = btn.dataset.height;
+                widthInput.value = width;
+                heightInput.value = height;
+            });
+        });
+
+        // Aspect Ratio Buttons
+        document.querySelectorAll('.ratio-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.ratio-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                const ratio = btn.dataset.ratio.split('/');
+                const w = parseInt(widthInput.value);
+                const h = Math.round(w * parseInt(ratio[1]) / parseInt(ratio[0]));
+                heightInput.value = h;
+            });
+        });
+
+        // Quality Slider
+        qualityInput.addEventListener('input', () => {
+            qualityValue.textContent = Math.round(qualityInput.value * 100);
+        });
+
+        // Resize Button
+        resizeBtn.addEventListener('click', resizeImage);
+
+        // Reset Button
+        resetBtn.addEventListener('click', () => {
+            preview.src = originalImage.src;
+            successMessage.style.display = 'none';
+            downloadPreview.style.display = 'none';
+        });
+
+        function resizeImage() {
+            if (!originalImage) return;
+
+            const width = parseInt(widthInput.value);
+            const height = parseInt(heightInput.value);
+
+            if (width < 1 || height < 1) {
+                showError('Kích thước phải lớn hơn 0!');
+                return;
+            }
+
+            try {
+                canvas.width = width;
+                canvas.height = height;
+                ctx.drawImage(originalImage, 0, 0, width, height);
+
+                const format = formatSelect.value;
+                const quality = qualityInput.value;
+                const mimeType = format === 'jpg' ? 'image/jpeg' : format === 'webp' ? 'image/webp' : 'image/png';
+
+                canvas.toBlob((blob) => {
+                    const url = URL.createObjectURL(blob);
+                    resultImage.src = url;
+                    downloadPreview.style.display = 'block';
+                    successMessage.style.display = 'block';
+                    hideError();
+                }, mimeType, quality);
+            } catch (error) {
+                showError('Lỗi khi chỉnh kích thước: ' + error.message);
+            }
+        }
+
+        // Download Button
+        downloadBtn.addEventListener('click', () => {
+            const format = formatSelect.value;
+            const quality = qualityInput.value;
+            const mimeType = format === 'jpg' ? 'image/jpeg' : format === 'webp' ? 'image/webp' : 'image/png';
+
+            canvas.toBlob((blob) => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `logo-${widthInput.value}x${heightInput.value}.${format}`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, mimeType, quality);
+        });
+
+        // Copy Base64
+        copyBtn.addEventListener('click', () => {
+            const imageData = resultImage.src;
+            navigator.clipboard.writeText(imageData).then(() => {
+                const originalText = copyBtn.textContent;
+                copyBtn.textContent = '✅ Đã copy!';
+                setTimeout(() => {
+                    copyBtn.textContent = originalText;
+                }, 2000);
+            });
+        });
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+        }
+
+        function hideError() {
+            errorMessage.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
