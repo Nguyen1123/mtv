@@ -1,123 +1,487 @@
 /* ==========================================
-   TỐI ƯU HÓA PHÔNG CHỮ (TYPOGRAPHY TOÀN HỆ THỐNG)
+   CSS VARIABLES & BASE RESET
    ========================================== */
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 :root {
+    --primary: #10b981;
+    --primary-dark: #059669;
+    --primary-light: rgba(16, 185, 129, 0.1);
+    --text-dark: #1e293b;
+    --text-muted: #64748b;
+    --border: #e2e8f0;
+    --bg-light: #f8fafc;
     --font-main: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --navbar-height: 70px;
+    --container-max: 1200px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+    --shadow-lg: 0 10px 30px rgba(0,0,0,0.12);
+    --radius-sm: 8px;
+    --hamburger-bar-height: 2px;
+    --hamburger-gap: 5px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
 }
 
-/* Tối ưu độ nét và khoảng cách chữ cho Body */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* ==========================================
+   TYPOGRAPHY
+   ========================================== */
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
 html, body {
     font-family: var(--font-main) !important;
-    -webkit-font-smoothing: antialiased; /* Làm mịn chữ trên màn hình */
+    -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility; /* Tối ưu hiển thị khoảng cách ký tự */
-    font-size: 15px; /* Cỡ chữ tiêu chuẩn, dễ đọc cho trang quản trị */
+    text-rendering: optimizeLegibility;
     line-height: 1.6;
+    color: var(--text-dark);
+    background-color: #fff;
 }
 
-/* Ép buộc TẤT CẢ các thẻ, bảng (table), form (input) phải dùng đúng phông chữ */
 *, *::before, *::after, input, button, textarea, select, table, th, td, a {
     font-family: var(--font-main) !important;
 }
 
-/* Tối ưu riêng cho Tiêu đề: Đậm hơn, khoảng cách chữ hẹp lại một chút (xu hướng thiết kế hiện đại) */
 h1, h2, h3, h4, h5, h6 {
     font-weight: 700;
-    letter-spacing: -0.02em; 
+    letter-spacing: -0.02em;
     line-height: 1.3;
-    color: #0f172a;
+    color: var(--text-dark);
 }
 
-/* Chỉnh lại độ lớn chữ trong bảng Admin cho thanh thoát */
-.table th {
-    font-size: 0.85rem;
-    letter-spacing: 0.03em;
+/* Fluid typography */
+h1 { font-size: clamp(1.6rem, 4vw, 3rem); }
+h2 { font-size: clamp(1.4rem, 3vw, 2rem); }
+h3 { font-size: clamp(1.1rem, 2.5vw, 1.5rem); }
+
+p { line-height: 1.7; }
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
 }
-.table td {
+
+a { text-decoration: none; color: inherit; }
+
+/* ==========================================
+   LAYOUT
+   ========================================== */
+.container {
+    width: 100%;
+    max-width: var(--container-max);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+
+.section {
+    padding: 5rem 0;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.section-header h2 {
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    color: var(--text-dark);
+    font-weight: 800;
+    margin-bottom: 0.75rem;
+}
+
+.section-header p {
+    color: var(--text-muted);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.page-content {
+    min-height: calc(100vh - var(--navbar-height) - 300px);
+}
+
+/* ==========================================
+   NAVBAR / HEADER
+   ========================================== */
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: #ffffff;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    height: var(--navbar-height);
+}
+
+.navbar .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.navbar-brand {
+    flex-shrink: 0;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+}
+
+.logo-img {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.logo-text {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: var(--text-dark);
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+/* Nav Menu */
+.nav-menu {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    gap: 0.25rem;
+}
+
+.nav-menu li a {
+    display: block;
+    padding: 0.5rem 0.85rem;
     font-size: 0.95rem;
-}
-/* --- TRẠNG THÁI ACTIVE CHO MENU --- */
-.nav-menu a {
+    font-weight: 600;
+    color: var(--text-dark);
+    border-radius: var(--radius-sm);
+    transition: color 0.2s, background 0.2s;
     position: relative;
-    padding-bottom: 4px;
+    white-space: nowrap;
 }
-.nav-menu a.active {
+
+.nav-menu li a:hover {
     color: var(--primary);
+    background: var(--primary-light);
+}
+
+.nav-menu a.active {
+    color: var(--primary) !important;
     font-weight: 700;
 }
+
 .nav-menu a.active::after {
     content: '';
     position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 100%;
+    bottom: 0;
+    left: 0.85rem;
+    right: 0.85rem;
     height: 3px;
     background-color: var(--primary);
     border-radius: 4px;
 }
 
-/* --- LÀM ĐẸP FORM NHẬP LIỆU (UX/UI) --- */
-.form-group {
-    margin-bottom: 1.5rem;
+/* Hamburger Toggle Button */
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 44px;
+    height: 44px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: var(--radius-sm);
+    gap: var(--hamburger-gap);
+    flex-shrink: 0;
 }
-.form-group label {
+
+.menu-toggle span {
     display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-    color: var(--text-dark);
-    font-size: 0.95rem;
+    width: 24px;
+    height: var(--hamburger-bar-height);
+    background: var(--text-dark);
+    border-radius: 2px;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    transform-origin: center;
 }
-.form-group input, 
-.form-group textarea {
-    width: 100%;
-    padding: 14px 16px;
-    border: 1.5px solid var(--border);
-    border-radius: 12px;
-    font-family: inherit;
-    font-size: 1rem;
-    background-color: var(--bg-light);
-    color: var(--text-dark);
-    transition: all 0.3s ease;
+
+.menu-toggle.active span:nth-child(1) {
+    transform: translateY(calc(var(--hamburger-gap) + var(--hamburger-bar-height))) rotate(45deg);
 }
-.form-group input::placeholder, 
-.form-group textarea::placeholder {
-    color: #94a3b8;
+.menu-toggle.active span:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
 }
-.form-group input:hover, 
-.form-group textarea:hover {
-    border-color: #cbd5e1;
+.menu-toggle.active span:nth-child(3) {
+    transform: translateY(calc(-1 * (var(--hamburger-gap) + var(--hamburger-bar-height)))) rotate(-45deg);
 }
-.form-group input:focus, 
-.form-group textarea:focus {
-    outline: none;
-    border-color: var(--primary);
-    background-color: #ffffff;
-    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
-}
+
 /* ==========================================
-   TỐI ƯU HÓA GIAO DIỆN FORM (INPUT, TEXTAREA) CHO TOÀN HỆ THỐNG
+   HERO SECTION
+   ========================================== */
+.hero-banner {
+    padding: 6rem 0 8rem;
+    background: linear-gradient(rgba(15,23,42,0.7), rgba(15,23,42,0.7)),
+                url('https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=1920') center/cover no-repeat;
+    color: #fff;
+    text-align: center;
+}
+
+.hero-banner h1 {
+    font-size: clamp(1.6rem, 4.5vw, 3rem);
+    font-weight: 800;
+    line-height: 1.3;
+    color: #fff;
+}
+
+.hero-banner p {
+    margin: 1.5rem auto 2.5rem;
+    opacity: 0.9;
+    max-width: 600px;
+    font-size: clamp(0.95rem, 2vw, 1.1rem);
+}
+
+/* ==========================================
+   BUTTONS
+   ========================================== */
+.btn {
+    display: inline-block;
+    padding: 0.8rem 2rem;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    line-height: 1;
+    text-align: center;
+    min-height: 44px;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(16,185,129,0.3);
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+.view-more-btn {
+    display: inline-block;
+    padding: 0.75rem 2rem;
+    border: 2px solid var(--primary);
+    color: var(--primary);
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    transition: all 0.3s;
+    min-height: 44px;
+    line-height: 1;
+}
+
+.view-more-btn:hover {
+    background: var(--primary);
+    color: #fff;
+}
+
+/* ==========================================
+   GRID SYSTEM
+   ========================================== */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+/* ==========================================
+   CARDS
+   ========================================== */
+.card {
+    background: #fff;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.card:hover {
+    border-color: var(--primary);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-4px);
+}
+
+.card-image-wrapper {
+    position: relative;
+    overflow: hidden;
+    background: var(--bg-light);
+    aspect-ratio: 4/3;
+}
+
+.card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.card:hover .card-image {
+    transform: scale(1.04);
+}
+
+.card-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.5rem;
+    color: #cbd5e1;
+    background: var(--bg-light);
+    min-height: 180px;
+}
+
+.card-badge {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    background: var(--primary);
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.card-content {
+    padding: 1.25rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-content h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--text-dark);
+}
+
+.card-content .desc {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+}
+
+.card-footer .price {
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--primary);
+}
+
+/* ==========================================
+   STATS
+   ========================================== */
+.stats-container {
+    margin-top: -4rem;
+    position: relative;
+    z-index: 5;
+}
+
+.stats-box {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    background: #fff;
+    padding: 2rem;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    border-bottom: 4px solid var(--primary);
+}
+
+.stat-card {
+    text-align: center;
+    border-right: 1px solid var(--border);
+    padding: 0.5rem 1rem;
+}
+
+.stat-card:last-child {
+    border-right: none;
+}
+
+.stat-card h3 {
+    color: var(--primary);
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    margin-bottom: 0.5rem;
+    font-weight: 800;
+}
+
+.stat-card p {
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0;
+}
+
+/* ==========================================
+   FORMS
    ========================================== */
 .form-group {
     margin-bottom: 1.5rem;
 }
 
-/* Định dạng nhãn (Label) nằm gọn gàng trên 1 dòng */
 .form-group label {
     display: block !important;
     margin-bottom: 0.5rem !important;
     font-weight: 600 !important;
-    color: #1e293b !important;
+    color: var(--text-dark) !important;
     font-size: 0.95rem !important;
 }
 
-/* Định dạng các ô nhập liệu chữ */
-.form-group input[type="text"], 
+.form-group input[type="text"],
 .form-group input[type="password"],
 .form-group input[type="email"],
 .form-group input[type="tel"],
 .form-group input[type="number"],
+.form-group select,
 .form-group textarea {
     display: block !important;
     width: 100% !important;
@@ -126,46 +490,429 @@ h1, h2, h3, h4, h5, h6 {
     border-radius: 10px !important;
     font-family: inherit !important;
     font-size: 1rem !important;
-    background-color: #f8fafc !important;
-    color: #1e293b !important;
+    background-color: var(--bg-light) !important;
+    color: var(--text-dark) !important;
     box-sizing: border-box !important;
     transition: all 0.3s ease !important;
+    min-height: 44px;
 }
 
-/* Hiệu ứng khi nhấp chuột vào ô nhập (Sáng viền xanh) */
-.form-group input[type="text"]:focus, 
-.form-group input[type="password"]:focus,
-.form-group textarea:focus {
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #94a3b8;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
     outline: none !important;
-    border-color: #10b981 !important;
-    background-color: #ffffff !important;
+    border-color: var(--primary) !important;
+    background-color: #fff !important;
     box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15) !important;
 }
 
-/* Định dạng riêng cho ô chọn File (Hình ảnh) */
 .form-group input[type="file"] {
     display: block !important;
     width: 100% !important;
     padding: 12px !important;
     border: 1.5px dashed #cbd5e1 !important;
     border-radius: 10px !important;
-    background-color: #f8fafc !important;
+    background-color: var(--bg-light) !important;
     cursor: pointer !important;
     box-sizing: border-box !important;
-    color: #64748b !important;
+    color: var(--text-muted) !important;
 }
 
-/* Xử lý các form nằm trên cùng 1 hàng (chia cột) */
 .form-row {
     display: flex;
     gap: 1.5rem;
     width: 100%;
 }
 
-/* Khi xem trên điện thoại sẽ tự động rớt xuống thành 1 cột */
-@media (max-width: 640px) {
+/* ==========================================
+   TABLES (responsive)
+   ========================================== */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    background: #fff;
+}
+
+.table th {
+    font-size: 0.85rem;
+    letter-spacing: 0.03em;
+    background: var(--bg-light);
+    color: var(--text-muted);
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 0.85rem 1rem;
+    text-align: left;
+    border-bottom: 2px solid var(--border);
+    white-space: nowrap;
+}
+
+.table td {
+    font-size: 0.95rem;
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+}
+
+.table tr:last-child td {
+    border-bottom: none;
+}
+
+.table tr:hover td {
+    background: var(--bg-light);
+}
+
+/* ==========================================
+   ALERTS
+   ========================================== */
+.alert {
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius-sm);
+    margin-bottom: 1.25rem;
+    font-size: 0.95rem;
+    border-left: 4px solid transparent;
+}
+
+.alert-success { background: #f0fdf4; border-color: var(--primary); color: #166534; }
+.alert-error,
+.alert-danger  { background: #fef2f2; border-color: #ef4444; color: #991b1b; }
+.alert-warning { background: #fffbeb; border-color: #f59e0b; color: #92400e; }
+.alert-info    { background: #eff6ff; border-color: #3b82f6; color: #1e40af; }
+
+/* ==========================================
+   FOOTER
+   ========================================== */
+.footer {
+    background: #0f172a;
+    color: #94a3b8;
+    padding: 4rem 0 2rem;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.footer-section h3 {
+    color: #fff;
+    margin-bottom: 1.2rem;
+    font-size: 1.05rem;
+}
+
+.footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+/* ==========================================
+   SOLUTION / HERO PAGE HEADERS
+   ========================================== */
+.solution-header,
+.page-hero {
+    padding: 5rem 0;
+    background: linear-gradient(rgba(16,185,129,0.9), rgba(5,150,105,0.9)), url('https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=1200') center/cover;
+    color: #fff;
+    text-align: center;
+}
+
+.solution-header h1,
+.page-hero h1 {
+    font-size: clamp(1.6rem, 4vw, 2.5rem);
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 1rem;
+}
+
+/* ==========================================
+   UTILITIES
+   ========================================== */
+.text-center { text-align: center; }
+.text-muted   { color: var(--text-muted); }
+.fw-bold      { font-weight: 700; }
+
+/* ==========================================
+   RESPONSIVE — TABLET (≤ 1024px)
+   ========================================== */
+@media (max-width: 1024px) {
+    .container {
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+    }
+
+    .section { padding: 4rem 0; }
+
+    .hero-banner { padding: 5rem 0 7rem; }
+
+    .grid {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1.25rem;
+    }
+
+    .stats-box {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ==========================================
+   RESPONSIVE — TABLET PORTRAIT (≤ 768px)
+   ========================================== */
+@media (max-width: 768px) {
+    /* Show hamburger, hide desktop nav */
+    .menu-toggle {
+        display: flex;
+    }
+
+    .nav-menu {
+        display: none;
+        position: absolute;
+        top: var(--navbar-height);
+        left: 0;
+        right: 0;
+        background: #fff;
+        flex-direction: column;
+        align-items: stretch;
+        padding: 0.75rem 1rem 1.25rem;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        border-top: 1px solid var(--border);
+        gap: 0.15rem;
+        z-index: 999;
+    }
+
+    .nav-menu.active {
+        display: flex;
+    }
+
+    .nav-menu li a {
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        border-radius: var(--radius-sm);
+    }
+
+    .nav-menu a.active::after {
+        display: none;
+    }
+
+    /* Stats: 2-col on tablet */
+    .stats-box {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .stat-card {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 1rem;
+    }
+
+    .stat-card:nth-last-child(-n+2) {
+        border-bottom: none;
+    }
+
+    /* Footer 2-col */
+    .footer-content {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    /* Section header */
+    .section { padding: 3.5rem 0; }
+
+    /* Solution header */
+    .solution-header,
+    .page-hero {
+        padding: 3.5rem 0;
+    }
+
+    /* Grid */
+    .grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+
+    /* Form row stacks */
     .form-row {
         flex-direction: column;
         gap: 0;
     }
+
+    /* Table — horizontal scroll */
+    .table-responsive {
+        margin: 0 -1rem;
+        width: calc(100% + 2rem);
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+    }
+
+    /* Hero */
+    .hero-banner {
+        padding: 4rem 0 6rem;
+    }
+}
+
+/* ==========================================
+   RESPONSIVE — MOBILE (≤ 640px)
+   ========================================== */
+@media (max-width: 640px) {
+    html { font-size: 15px; }
+
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .section { padding: 3rem 0; }
+
+    .logo-text {
+        font-size: 0.9rem;
+    }
+
+    /* Hero */
+    .hero-banner {
+        padding: 3rem 0 5rem;
+    }
+
+    /* Stats: 1 col */
+    .stats-box {
+        grid-template-columns: 1fr;
+        padding: 1.5rem;
+        gap: 0.75rem;
+    }
+
+    .stat-card {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 0.75rem;
+    }
+
+    .stat-card:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    /* Grid: 1-2 col */
+    .grid {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 1rem;
+    }
+
+    /* Footer: 1 col */
+    .footer-content {
+        grid-template-columns: 1fr;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    /* Solution header */
+    .solution-header,
+    .page-hero {
+        padding: 3rem 0;
+    }
+
+    /* Tables card-style on mobile */
+    .table-card thead {
+        display: none;
+    }
+
+    .table-card tbody tr {
+        display: block;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        margin-bottom: 1rem;
+        padding: 1rem;
+    }
+
+    .table-card tbody td {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 0.4rem 0;
+        border-bottom: 1px dashed var(--border);
+        font-size: 0.9rem;
+    }
+
+    .table-card tbody td:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    .table-card tbody td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        color: var(--text-dark);
+        font-size: 0.85rem;
+        white-space: nowrap;
+        margin-right: 1rem;
+    }
+}
+
+/* ==========================================
+   RESPONSIVE — SMALL MOBILE (≤ 480px)
+   ========================================== */
+@media (max-width: 480px) {
+    html { font-size: 14px; }
+
+    .hero-banner {
+        padding: 2.5rem 0 4.5rem;
+    }
+
+    .btn,
+    .view-more-btn {
+        padding: 0.7rem 1.5rem;
+        font-size: 0.95rem;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .card-image-wrapper {
+        aspect-ratio: 16/9;
+    }
+}
+
+/* ==========================================
+   RESPONSIVE — VERY SMALL MOBILE (≤ 360px)
+   ========================================== */
+@media (max-width: 360px) {
+    html { font-size: 13px; }
+
+    .logo-text {
+        display: none;
+    }
+}
+
+/* ==========================================
+   ADMIN TABLE OVERRIDES
+   ========================================== */
+.table th {
+    font-size: 0.85rem;
+    letter-spacing: 0.03em;
+}
+
+.table td {
+    font-size: 0.95rem;
 }
